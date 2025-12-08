@@ -59,7 +59,8 @@ const createAssignmentByGivingPdf = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ success: false, message: "PDF required" });
 
-    const fileBuffer = fs.readFileSync(req.file.path);
+    // const fileBuffer = fs.readFileSync(req.file.path);
+    const fileBuffer = req.file.buffer;
     const pdfData = await pdfParse(fileBuffer);
     const text = cleanPdfText(pdfData.text);
 
@@ -85,7 +86,7 @@ ${text}
       ],
       temperature: 0.2
     });
-
+    console.log(response)
     return res.json({
       success: true,
       assignment: response.choices[0].message.content
