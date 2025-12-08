@@ -9,6 +9,9 @@ const contentGenerator= require('./Router/TextGeneratorRoutes/textGeneratorRoute
 app.use(cors())
 app.use(express.json())
 app.use('/setup',contentGenerator) 
+app.get('/',(req,res)=>{
+    res.send("Server is Running Without any error")
+})
 app.listen(port,()=>{
 console.log("App listen on port ",port)
 
