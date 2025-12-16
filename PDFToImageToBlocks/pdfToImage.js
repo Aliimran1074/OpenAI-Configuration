@@ -1,24 +1,60 @@
-const {getDocument} = require('pdfjs-dist/legacy/build/pdf.js')
-const {createCanvas}= require('canvas')
+// const {getDocument} = require('pdfjs-dist/legacy/build/pdf.js')
+// const {createCanvas}= require('canvas')
 
-const pdfToImageBuffer = async(pdfBuffer)=>{
-    const loadingTask= getDocument({data:pdfBuffer})
-    const pdfDoc=await loadingTask.promise
-    const numPages= pdfDoc.numPages 
-    const images = []
+// const pdfToImageBuffer = async(pdfBuffer)=>{
+//     const loadingTask= getDocument({data:pdfBuffer})
+//     const pdfDoc=await loadingTask.promise
+//     const numPages= pdfDoc.numPages 
+//     const images = []
 
-    for(let i=1;i<=numPages;i++){
-        const page = await pdfDoc.getPage(i)
-        const viewport= page.getViewport({scale:2})
-        const canvas= createCanvas(viewport.width,viewport.height)
-        const context = canvas.getContext("2d")
+//     for(let i=1;i<=numPages;i++){
+//         const page = await pdfDoc.getPage(i)
+//         const viewport= page.getViewport({scale:2})
+//         const canvas= createCanvas(viewport.width,viewport.height)
+//         const context = canvas.getContext("2d")
 
-        await page.render({canvasContext:context,viewport}).promise
-        const pageBuffer= canvas.toBuffer('image/jpeg')
-        images.push(pageBuffer)
-    }
+//         await page.render({canvasContext:context,viewport}).promise
+//         const pageBuffer= canvas.toBuffer('image/jpeg')
+//         images.push(pageBuffer)
+//     }
 
-    return images
-}
+//     return images
+// }
 
-module.exports= {pdfToImageBuffer}
+// module.exports= {pdfToImageBuffer}
+
+const pdfjsLib = require('pdfjs-dist/legacy/build/pdf.js');
+const { createCanvas } = require('canvas');
+
+// 🔥 IMPORTANT FIX FOR VERCEL
+pdfjsLib.GlobalWorkerOptions.workerSrc = null;
+
+const pdfToImageBuffer = async (pdfBuffer) => {
+  const loadingTask = pdfjsLib.getDocument({
+    data: pdfBuffer,
+    disableWorker: true // 🔥 THIS LINE IS KEY
+  });
+
+  const pdfDoc = await loadingTask.promise;
+  const numPages = pdfDoc.numPages;
+  const images = [];
+
+  for (let i = 1; i <= numPages; i++) {
+    const page = await pdfDoc.getPage(i);
+    const viewport = page.getViewport({ scale: 2 });
+
+    const canvas = createCanvas(viewport.width, viewport.height);
+    const context = canvas.getContext("2d");
+
+    await page.render({
+      canvasContext: context,
+      viewport
+    }).promise;
+
+    images.push(canvas.toBuffer("image/jpeg"));
+  }
+
+  return images;
+};
+
+module.exports = { pdfToImageBuffer };
