@@ -5,10 +5,12 @@ const app= express()
 const cors= require('cors')
 const port = process.env.Port
 const contentGenerator= require('./Router/TextGeneratorRoutes/textGeneratorRoute')
+const quizRoutes= require('./Router/QuizRoutes/quizroutes')
 // const contentGenerator= require('../Router')
 app.use(cors())
 app.use(express.json())
 app.use('/setup',contentGenerator) 
+app.use('/quiz',quizRoutes)
 app.get('/',(req,res)=>{
     res.send("Server is Running Without any error")
 })
