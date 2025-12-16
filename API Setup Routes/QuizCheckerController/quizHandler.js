@@ -36,7 +36,7 @@ const handler = async(req,res)=>{
         return res.status(200).json({message:'Quiz Checked Successfully',success:true,result})
     } catch (error) {
         console.log("Issue in Handler Function ",error)
-        return res.status(404).json({message:"Issue in Handler Function",error})
+        return res.status(404).json({message:"Issue in Handler Function",error:error?.message,stack:error?.stack})
     }
 }
 
