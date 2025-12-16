@@ -24,7 +24,6 @@
 // module.exports= {pdfToImageBuffer}
 
 const pdfjsLib = require("pdfjs-dist/legacy/build/pdf.js");
-const path = require("path");
 const { createCanvas } = require("canvas");
 
 /**
@@ -38,7 +37,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = require.resolve(
 const pdfToImageBuffer = async (pdfBuffer) => {
   const loadingTask = pdfjsLib.getDocument({
     data: pdfBuffer,
-    disableWorker: false // 🔥 worker allowed but manually provided
+    disableWorker: false //  worker allowed but manually provided
   });
 
   const pdfDoc = await loadingTask.promise;
@@ -59,7 +58,7 @@ const pdfToImageBuffer = async (pdfBuffer) => {
     images.push(canvas.toBuffer("image/jpeg"));
   }
 
-  return images;
-};
+  return images
+}
 
-module.exports = { pdfToImageBuffer };
+module.exports = { pdfToImageBuffer }
