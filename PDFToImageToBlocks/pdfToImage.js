@@ -23,23 +23,28 @@
 
 // module.exports= {pdfToImageBuffer}
 
-const pdfjsLib = require('pdfjs-dist/legacy/build/pdf.js');
-const { createCanvas } = require('canvas');
+const pdfjsLib = require("pdfjs-dist/legacy/build/pdf.js");
+const path = require("path");
+const { createCanvas } = require("canvas");
 
-// 🔥 IMPORTANT FIX FOR VERCEL
-pdfjsLib.GlobalWorkerOptions.workerSrc = null;
+/**
+ * 🚨 VERY IMPORTANT FOR VERCEL
+ * Manually point pdfjs to worker file
+ */
+pdfjsLib.GlobalWorkerOptions.workerSrc = require.resolve(
+  "pdfjs-dist/legacy/build/pdf.worker.js"
+);
 
 const pdfToImageBuffer = async (pdfBuffer) => {
   const loadingTask = pdfjsLib.getDocument({
     data: pdfBuffer,
-    disableWorker: true // 🔥 THIS LINE IS KEY
+    disableWorker: false // 🔥 worker allowed but manually provided
   });
 
   const pdfDoc = await loadingTask.promise;
-  const numPages = pdfDoc.numPages;
   const images = [];
 
-  for (let i = 1; i <= numPages; i++) {
+  for (let i = 1; i <= pdfDoc.numPages; i++) {
     const page = await pdfDoc.getPage(i);
     const viewport = page.getViewport({ scale: 2 });
 
