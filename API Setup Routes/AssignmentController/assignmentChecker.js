@@ -4,10 +4,12 @@ const { assignmentCheckerPrompt } = require('../prompts.js')
 const {openai} = require('../setup')
 
 const checkAssignment = async ( questions, content ) => {
+
+  // plagarism wala kaam karna hai (FYP 1  ke baad)
   const contentType= content.type
   console.log("PDF Type:",contentType)
   
-  if(contentType=="MIXED" || contentType=="SCANNED"){ 
+  if(contentType=="MIXED" ){ 
     const pages = content.pdfPages
   const images = pages.map(page=>page.image)
   const text = pages.map(page=>page.text)
@@ -44,6 +46,40 @@ ${questions.map((currentElement,currentIndex) => `${currentIndex + 1}. ${current
   const cleanJSON = rawOutput.replace(/```json|```/g, "").trim();
 
   return JSON.parse(cleanJSON);
+}
+else if(contentType=="SCANNED"){
+    const images = content.pdfImages
+  // const images = pages.map(page=>page.image)
+  // const text = pages.map(page=>page.text)
+    const response = await openai.responses.create({
+    model: "gpt-4.1",
+    temperature: 0.2,
+
+    input: [
+      {
+        role: "system",
+        content: assignmentCheckerPrompt
+      },
+      {
+        role: "user",
+        content: [
+          {
+            type: "input_text",
+            text: `
+Questions (in order):
+${questions.map((currentElement,currentIndex) => `${currentIndex + 1}. ${currentElement.question}`)}`},
+   ...images.map(buffer => ({
+            type: "input_image",
+            image_url: `data:image/jpeg;base64,${buffer.toString("base64")}`
+          }))
+        ]
+      }
+    ]
+  })
+  const rawOutput = response.output_text;
+  const cleanJSON = rawOutput.replace(/```json|```/g, "").trim();
+
+  return JSON.parse(cleanJSON)
 }
 else{ 
   const text = content.textPages
