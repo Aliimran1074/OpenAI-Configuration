@@ -80,7 +80,7 @@ Format:
   ]
 }
 ${text}
-    `;
+    `
 
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",

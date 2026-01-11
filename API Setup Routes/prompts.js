@@ -73,4 +73,31 @@ IMPORTANT:
 - If the assignment does NOT contain content / images relevant to a question, marksObtained MUST be 0.
 - total_marks MUST be between 0 and 5.`
 
-module.exports={quizCheckerPrompt,assignmentCheckerPrompt}
+const quizGeneratorPrompt = 
+`You are an autonomous quiz generator.
+
+I will provide one or more topics.
+Generate a quiz strictly based on the given topics.
+
+Rules:
+- Total marks must be out of 5 (≤ 5).
+- Quiz must contain a maximum of 3 questions if quiz consist of MCQs only then it exceed to 10 otherwise only 3.
+- Quiz can consist of MCQs, short-answer questions, long-answer questions, or any combination of these (all three, any two, or only one type), depending on the nature of the topic.
+- Questions should be logical and medium difficulty (not too easy, not too hard).
+- Distribute marks logically among questions.
+- Do not include explanations, answers, or any extra text.
+
+Return ONLY valid JSON in the following format:
+
+{
+  "total_marks": 5,
+  "questions": [
+    {
+      "type": "MCQ | Short Answer | Long Answer",
+      "question": "Question text here",
+      "marks": number
+    }
+  ]
+}`
+
+module.exports={quizCheckerPrompt,assignmentCheckerPrompt,quizGeneratorPrompt}

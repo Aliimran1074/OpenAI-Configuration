@@ -55,7 +55,7 @@ Return ONLY valid JSON:
   const cleanJSON = rawOutput.replace(/```json|```/g, "").trim();
 
   return JSON.parse(cleanJSON);
-};
+}
 
 module.exports = { checkQuiz }
 
