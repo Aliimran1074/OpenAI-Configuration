@@ -1,5 +1,5 @@
-const { createAssignmentByGivingPdf, assignmentCreationByTopicName } = require('../../API Setup Routes/assignmentCreation.js');
-const { contentGenerator } = require('../../API Setup Routes/contentGenerator')
+const { createAssignmentByGivingPdf, assignmentCreationByTopicName } = require('../../API Setup Routes/AssignmentController/assignmentCreation.js');
+const { contentGenerator } = require('../../API Setup Routes/ContentGenerator/contentGenerator.js')
 const {upload} =require("../../Multer/multermiddleware.js")
 
 

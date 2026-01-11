@@ -7,7 +7,7 @@ const handler = async(req,res)=>{
         const {questions} = req.body
         const pdfFile = req.file
         // console.log(questions)
-        
+        // console.log(questions)
         const questionsArray =JSON.parse(questions)
         if(!Array.isArray(questionsArray)) res.status(400).json({error:"Invalid input "})
        

@@ -1,4 +1,4 @@
-const {openai} = require('./setup')
+const {openai} = require('../setup')
 const fs = require('fs')
 const pdfParse = require("pdf-parse")
 // const pdfParse = require("pdf-parse").default || require("pdf-parse");
@@ -100,7 +100,7 @@ ${text}
     console.error("Error generating assignment:", err);
     return res.status(500).json({ success: false, error: err.message || "AI error" });
   }
-};
+}
 
 
 // module.exports = { createAssignmentByGivingPdf };

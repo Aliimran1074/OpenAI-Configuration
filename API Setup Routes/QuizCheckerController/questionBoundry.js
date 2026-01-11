@@ -1,4 +1,4 @@
-const { prompt } = require('../quizcheckerPrompt')
+const {quizCheckerPrompt} = require('../prompts')
 const {openai} = require('../setup')
 
 const checkQuiz = async ({ questions, answerImages }) => {
@@ -11,7 +11,7 @@ const checkQuiz = async ({ questions, answerImages }) => {
     input: [
       {
         role: "system",
-        content: prompt
+        content: quizCheckerPrompt
       },
       {
         role: "user",

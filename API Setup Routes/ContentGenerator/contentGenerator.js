@@ -1,4 +1,4 @@
-const {openai}= require('./setup') 
+const {openai}= require('../setup') 
 
 // This function will provide a slide content for course content 
 const contentGenerator = async (req, res) => {
