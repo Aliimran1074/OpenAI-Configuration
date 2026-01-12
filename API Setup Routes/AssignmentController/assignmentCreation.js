@@ -104,4 +104,4 @@ ${text}
 
 
 // module.exports = { createAssignmentByGivingPdf };
-module.exports={createAssignmentByGivingPdf,assignmentCreationByTopicName}
+module.exports={createAssignmentByGivingPdf,assignmentCreationByTopicName,cleanPdfText}

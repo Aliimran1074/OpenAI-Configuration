@@ -73,11 +73,9 @@ IMPORTANT:
 - If the assignment does NOT contain content / images relevant to a question, marksObtained MUST be 0.
 - total_marks MUST be between 0 and 5.`
 
-const quizGeneratorPrompt = 
-`You are an autonomous quiz generator.
 
-I will provide one or more topics.
-Generate a quiz strictly based on the given topics.
+const quizGeneratorPrompt = 
+`You are an autonomous quiz generator.I will provide one or more topics.Generate a quiz strictly based on the given topics.
 
 Rules:
 - Total marks must be out of 5 (≤ 5).
@@ -98,6 +96,57 @@ Return ONLY valid JSON in the following format:
       "marks": number
     }
   ]
-}`
+}
+  `
+// issue only creating MCQS
+const quizGeneratorViaFilePrompt=  `
+You are an autonomous quiz generator.
 
-module.exports={quizCheckerPrompt,assignmentCheckerPrompt,quizGeneratorPrompt}
+You will receive raw text extracted from a PDF. The text may contain headers, footers, page numbers, names, or irrelevant content. Ignore all such content.
+
+Step 1: Identify whether the relevant topic content is primarily:
+A) factual, definitional, or list-based
+B) conceptual, explanatory, or descriptive
+
+Decision Rule (MANDATORY):
+- If the content fits category A, generate an MCQ-based quiz.
+- If the content fits category B, generate a short-answer and long-answer quiz.
+- Choose ONLY ONE category. Do not mix formats.
+
+Quiz Rules:
+- Total marks must be exactly 5.
+- Medium difficulty level only.
+
+Format Rules:
+- If MCQs are selected:
+  - Generate exactly 10 MCQs.
+  - Each MCQ carries 0.5 marks.
+  - Each MCQ must have exactly 4 options.
+- If theory questions are selected:
+  - Generate exactly 3 questions.
+  - Use a mix of short-answer and long-answer questions.
+  - Distribute marks logically to total 5.
+
+Output Rules (STRICT):
+- Return ONLY a valid JSON object.
+- Do NOT include explanations, answers, or extra text.
+- Do NOT wrap the JSON in quotes.
+- Do NOT escape characters.
+- Do NOT include newline characters, tabs, or symbols such as \n, \t, or +.
+
+JSON Format:
+
+{
+  "total_marks": 5,
+  "questions": [
+    {
+      "type": "MCQ or Short Answer or Long Answer",
+      "question": "Question text here",
+      "marks": number,
+      "options": ["Option A", "Option B", "Option C", "Option D"]
+    }
+  ]
+}
+`
+
+module.exports={quizCheckerPrompt,assignmentCheckerPrompt,quizGeneratorPrompt,quizGeneratorViaFilePrompt}

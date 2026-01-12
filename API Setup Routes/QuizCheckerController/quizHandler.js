@@ -1,9 +1,44 @@
 // const { text } = require('pdfkit')
 const {pdfToImageBuffer} =require('../../PDFToImageToBlocks/pdfToImage')
-const { quizGeneratorPrompt } = require('../prompts')
+const { quizGeneratorPrompt, quizGeneratorViaFilePrompt } = require('../prompts')
 const { openai } = require('../setup')
 const {checkQuiz} = require('./questionBoundry')
+const {cleanPdfText}=require('../AssignmentController/assignmentCreation')
+const pdfParse = require("pdf-parse")
+const quizGeneratorViaContent= async(req,res)=>{
+    try {
+   if (!req.file) return res.status(400).json({ success: false, message: "PDF required" })
 
+    const fileBuffer = req.file.buffer;
+    const pdfData = await pdfParse(fileBuffer)
+    const text = cleanPdfText(pdfData.text)
+
+     const response = await openai.responses.create({
+        model:'gpt-4.1-mini',
+        temperature:0.7,
+        input:[
+            {role:'system',content:quizGeneratorViaFilePrompt},
+            {role:'user',content:`Text :${text} `
+            
+        }],
+    })
+    console.log(response)
+    if(!response){
+        console.log('Issue in Quiz generator function')
+        return res.status(400).json({message:"Issue in Quiz Generator Function"})
+    }
+    const output = response.output_text
+    const cleanJSON = output.replace(/```json|```/g, "").trim()
+    const finalOuput=  JSON.parse(cleanJSON)
+    console.log(finalOuput)
+    return res.status(200).json({message:'Final Output is :',finalOuput})
+
+  } 
+  catch (error) {
+    console.log("Error in Quiz Generator Function via Topic",error)
+    return res.status(404).json({message:"Error in Quiz Generator Function via Topic",error})
+  }       
+}
 
 const quizGeneratorByTopicName = async(req,res)=>{
 try {
@@ -65,4 +100,4 @@ const handler = async(req,res)=>{
     }
 }
 
-module.exports={handler,quizGeneratorByTopicName}
+module.exports={handler,quizGeneratorByTopicName,quizGeneratorViaContent}
