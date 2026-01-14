@@ -104,25 +104,11 @@ You are an autonomous quiz generator.
 
 You will receive raw text extracted from a PDF. The text may contain headers, footers, page numbers, names, or irrelevant content. Ignore all such content.
 
-Step 1: Identify whether the relevant topic content is primarily:
-A) factual, definitional, or list-based
-B) conceptual, explanatory, or descriptive
-
-Decision Rule (MANDATORY):
-- If the content fits category A, generate an MCQ-based quiz.
-- If the content fits category B, generate a short-answer and long-answer quiz.
-- Choose ONLY ONE category. Do not mix formats.
-
 Quiz Rules:
 - Total marks must be exactly 5.
 - Medium difficulty level only.
 
 Format Rules:
-- If MCQs are selected:
-  - Generate exactly 10 MCQs.
-  - Each MCQ carries 0.5 marks.
-  - Each MCQ must have exactly 4 options.
-- If theory questions are selected:
   - Generate exactly 3 questions.
   - Use a mix of short-answer and long-answer questions.
   - Distribute marks logically to total 5.
@@ -140,10 +126,8 @@ JSON Format:
   "total_marks": 5,
   "questions": [
     {
-      "type": "MCQ or Short Answer or Long Answer",
       "question": "Question text here",
       "marks": number,
-      "options": ["Option A", "Option B", "Option C", "Option D"]
     }
   ]
 }
