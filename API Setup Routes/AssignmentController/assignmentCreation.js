@@ -5,15 +5,18 @@ const pdfParse = require("pdf-parse")
 
 const assignmentCreationByTopicName=async(req,res)=>{
     try {
-        const {topicsName,difficultyLevel,format,noOfQuestions}=req.body
+      // changes here due to main backend logic that provide topics name in string not in array 
+        // const {topicsName,difficultyLevel,format,noOfQuestions,type}=req.body
+        const {topicsName,difficultyLevel,format,noOfQuestions,type}=req.body
+
         console.log("Topics Name :",topicsName)
-        if(!topicsName || !Array.isArray(topicsName) ||topicsName.length===0){
-            console.log("Please Provide Topic")
-            return res.status(400).json({message:"Please Provide Topic"})
-        }
-        const instruction = `You are a teaching assistant. I will provide you an array of topics.You will create an assignment consist of ${noOfQuestions} question with diffculty level : ${difficultyLevel} and format will be ${format} based`
-        const topicList = `Topics : ${JSON.stringify(topicsName)}`
-        const prompt = `${instruction} \n\n ${topicList}`
+        // if(!topicsName || !Array.isArray(topicsName) ||topicsName.length===0){
+        //     console.log("Please Provide Topic")
+        //     return res.status(400).json({message:"Please Provide Topic"})
+        // }
+        const instruction = `You are a teaching assistant. I will provide you an array of topics.You will create an assignment consist of ${noOfQuestions} question with diffculty level : ${difficultyLevel} and nature of assignment should be ${type} and format will be ${format} based`
+        // const topicList = `Topics : ${topicsName}`
+        const prompt = `${instruction} \n\n ${topicsName}`
        
         const result = await openai.chat.completions.create({
             model: 'gpt-4',
