@@ -14,7 +14,54 @@ const assignmentCreationByTopicName=async(req,res)=>{
         //     console.log("Please Provide Topic")
         //     return res.status(400).json({message:"Please Provide Topic"})
         // }
-        const instruction = `You are a teaching assistant. I will provide you an array of topics.You will create an assignment consist of ${noOfQuestions} question with diffculty level : ${difficultyLevel} and nature of assignment should be ${type} and format will be ${format} based`
+        const instruction = `You are an expert teaching assistant.
+
+Task:
+Generate an academic assignment using the provided topics.
+
+Assignment Configuration:
+- Total questions: ${noOfQuestions}
+- Difficulty level: ${difficultyLevel}
+- Assignment type: ${type}
+- Output format: ${format}
+
+Rules:
+- Questions must be relevant to the provided topics
+- Avoid duplicate or very similar questions
+- Ensure questions are academically meaningful and well-structured
+- Match the requested difficulty level accurately
+- Do not include answers unless explicitly requested
+- Return ONLY valid JSON
+- Do not return markdown, explanations, notes, or extra text
+
+Output Format:
+
+For Q/A assignments:
+{
+  "title": "Assignment Title",
+  "questions": [
+    "Question 1",
+    "Question 2",
+    "Question 3"
+  ]
+}
+
+For MCQ assignments:
+{
+  "title": "Assignment Title",
+  "questions": [
+    {
+      "question": "Question 1",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ]
+    }
+  ]
+}
+`
         // const topicList = `Topics : ${topicsName}`
         const prompt = `${instruction} \n\n ${topicsName}`
        
