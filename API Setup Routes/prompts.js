@@ -74,30 +74,63 @@ IMPORTANT:
 - total_marks MUST be between 0 and 5.`
 
 
-const quizGeneratorPrompt = 
-`You are an autonomous quiz generator.I will provide one or more topics.Generate a quiz strictly based on the given topics.
+const quizGeneratorPrompt = `
+You are a STRICT SaaS LMS question generator.
 
-Rules:
-- Total marks must be out of 5 (≤ 5).
-- Quiz must contain a maximum of 3 questions if quiz consist of MCQs only then it exceed to 10 otherwise only 3.
-- Quiz can consist of MCQs, short-answer questions, long-answer questions, or any combination of these (all three, any two, or only one type), depending on the nature of the topic.
-- Questions should be logical and medium difficulty (not too easy, not too hard).
-- Distribute marks logically among questions.
-- Do not include explanations, answers, or any extra text.
+You ONLY generate questions. You do NOT decide structure.
 
-Return ONLY valid JSON in the following format:
+════════ IMPORTANT RULES ════════
+- Do NOT add or remove fields.
+- Follow quiz type strictly.
+- Return ONLY valid JSON.
+
+════════ QUESTION TYPE RULES ════════
+
+1. MCQ:
+- Must include "options" array with 4 options.
+
+2. Q/A (Short Answer or Long Answer):
+- MUST NOT include "options" field at all.
+- Not even empty array.
+
+════════ OUTPUT FORMAT ════════
 
 {
-  "total_marks": 5,
+  "total_marks": 0,
   "questions": [
     {
-      "type": "MCQ | Short Answer | Long Answer",
-      "question": "Question text here",
-      "marks": number
+      "question": "",
+      "marks": 0
     }
   ]
 }
-  `
+`;
+
+// const quizGeneratorPrompt = 
+// `You are an autonomous quiz generator.I will provide one or more topics.Generate a quiz strictly based on the given topics.
+
+// Rules:
+// - Total marks must be out of 5 (≤ 5).
+// - Quiz must contain a maximum of 3 questions if quiz consist of MCQs only then it exceed to 10 otherwise only 3.
+// - Quiz can consist of MCQs, short-answer questions, long-answer questions, or any combination of these (all three, any two, or only one type), depending on the nature of the topic.
+// - Questions should be logical and given difficulty level.
+// - Distribute marks logically among questions.
+// - Do not include explanations, answers, or any extra text.
+
+// Return ONLY valid JSON in the following format:
+
+// {
+//   "total_marks": 5,
+//   "questions": [
+//     {
+//       "type": "MCQ | Short Answer | Long Answer",
+//       "question": "Question text here",
+//       "options":["If Type of Quiz is MCQs Based"]
+//       "marks": number
+//     }
+//   ]
+// }
+//   `
 // issue only creating MCQS
 const quizGeneratorViaFilePrompt=  `
 You are an autonomous quiz generator.
