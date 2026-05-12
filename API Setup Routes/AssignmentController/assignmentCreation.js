@@ -7,7 +7,7 @@ const assignmentCreationByTopicName=async(req,res)=>{
     try {
       // changes here due to main backend logic that provide topics name in string not in array 
         // const {topicsName,difficultyLevel,format,noOfQuestions,type}=req.body
-        const {topicsName,difficultyLevel,format,noOfQuestions,type}=req.body
+        const {topicsName,difficultyLevel,format,noOfQuestions,totalMarks}=req.body
 
         console.log("Topics Name :",topicsName)
         // if(!topicsName || !Array.isArray(topicsName) ||topicsName.length===0){
@@ -22,9 +22,8 @@ Generate an academic assignment using the provided topics.
 Assignment Configuration:
 - Total questions: ${noOfQuestions}
 - Difficulty level: ${difficultyLevel}
-- Assignment type: ${type}
 - Output format: ${format}
-
+- Total Marks : ${totalMarks}
 Rules:
 - Questions must be relevant to the provided topics
 - Avoid duplicate or very similar questions
@@ -43,25 +42,8 @@ For Q/A assignments:
     "Question 1",
     "Question 2",
     "Question 3"
-  ]
-}
-
-For MCQ assignments:
-{
-  "title": "Assignment Title",
-  "questions": [
-    {
-      "question": "Question 1",
-      "options": [
-        "Option A",
-        "Option B",
-        "Option C",
-        "Option D"
-      ]
-    }
-  ]
-}
-`
+    ],
+    "total_marks" : "Total Marks"} `
         // const topicList = `Topics : ${topicsName}`
         const prompt = `${instruction} \n\n ${topicsName}`
        
