@@ -44,12 +44,12 @@ const quizGeneratorViaContent = async (req, res) => {
 
 const quizGeneratorByTopicName = async (req, res) => {
     try {
-        const { topics, quizType, totalMarks, numberOfQuestions,difficultyLevel } = req.body
-        console.log(topics)
-        console.log("Total Marks is ",totalMarks)
-        console.log("Number of Questions is ,",numberOfQuestions)
-        const marksPerQuestion =Number( totalMarks/numberOfQuestions)
-        console.log("Marks per question",marksPerQuestion)
+        const { topicsName, type, totalMarks, noOfQuestions,difficultyLevel } = req.body
+        // console.log(topicsName)
+        // console.log("Total Marks is ",totalMarks)
+        // console.log("Number of Questions is ,",noOfQuestions)
+        const marksPerQuestion =Number( totalMarks/noOfQuestions)
+        // console.log("Marks per question",marksPerQuestion)
         const response = await openai.responses.create({
             model: 'gpt-4.1-mini',
             temperature: 0.7,
@@ -58,13 +58,13 @@ const quizGeneratorByTopicName = async (req, res) => {
                 {
                     role: 'user', content:
   `
-Quiz Type: ${quizType}
+Quiz Type: ${type}
 Difficulty Level: ${difficultyLevel}
-Topics: ${topics}
+Topics: ${topicsName}
 
 STRICT STRUCTURE (DO NOT CHANGE):
 - Total Marks: ${totalMarks}
-- Number of Questions: ${numberOfQuestions}
+- Number of Questions: ${noOfQuestions}
 - Marks per Question: ${marksPerQuestion}
 
 Generate quiz strictly according to above structure.
@@ -80,7 +80,7 @@ Return ONLY valid JSON.
         const output = response.output_text
         const cleanJSON = output.replace(/```json|```/g, "").trim()
         const finalOuput = JSON.parse(cleanJSON)
-        console.log(finalOuput)
+        // console.log(finalOuput)
         return res.status(200).json({ message: 'Final Output is :', finalOuput })
 
     } catch (error) {
