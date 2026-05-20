@@ -46,7 +46,7 @@ if(pdfType=='TEXT'){
   return {type:pdfType,textPages}
 }
 else if(pdfType=='SCANNED'){
-  const pdfImages = pdfToImageBuffer(pdfBuffer)
+  const pdfImages =await pdfToImageBuffer(pdfBuffer) 
   return {type:pdfType,pdfImages}
 }
 else{
