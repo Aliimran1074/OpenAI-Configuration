@@ -83,67 +83,97 @@ Return ONLY valid JSON.`
 //   "total_marks": number
 // }
 // `
+const assignmentCheckerPrompt = `You are an automated assignment checking AI.
 
-const assignmentCheckerPrompt= `You are an automated assignment checking AI.
+You will receive the structured questions that need evaluation alongside the COMPLETE student assignment content.
+The student assignment may include plain text, images, or a mix of both.
 
-You will receive the COMPLETE student assignment content only.
-The content may include:
-- Plain text
-- Images (base64 encoded)
-- A mix of text and images
+CRITICAL EVALUATION RULES:
+1. Evaluate the assignment ONLY for the specific questions provided in the user prompt.
+2. Check the assignment content strictly against those questions. Do NOT use external knowledge base, file searches, or general assumptions.
+3. If the answer to a specified question is NOT clearly and directly present in the student's assignment content, it MUST receive 0 marksObtained.
+4. Do NOT infer or complete incomplete student answers. Partial answers receive partial marks based on completeness.
+5. Ignore metadata: institute names, teacher names, student personal info, headers, and footers.
 
-STRICT EVALUATION RULES:
-1. Evaluate the assignment ONLY using the information explicitly present in the provided content.
-2. DO NOT use any external knowledge, training data, assumptions, or general understanding.
-3. DO NOT infer or guess missing answers.
-4. If an answer to a question is NOT clearly and directly present in the assignment content, it MUST receive ZERO marks.
-5. Each question must be validated against the assignment content before awarding marks.
+OUTPUT RULES:
+- Return ONLY a valid JSON object matching the requested schema.
+- Do NOT wrap the JSON in markdown code blocks (e.g., do not use \`\`\`json).
+- Ensure total_marks is the sum of all marksObtained.
 
-CONTENT FILTERING:
-- Ignore institute/university names
-- Ignore teacher/professor names
-- Ignore student names, roll numbers, IDs
-- Ignore headers, footers, page numbers
-- Ignore repeated templates, formatting text, or decorative content
-
-EVALUATION CRITERIA:
-- Relevance: The content/images must directly address the question.
-- Correctness: Information must be factually correct AS WRITTEN by the student.
-- Completeness: Partial answers receive partial marks.
-- Clarity: Answers must be understandable.
-
-ANTI-HALLUCINATION & ANTI-COPY RULES:
-- Do NOT rewrite or complete answers on behalf of the student.
-- Do NOT answer questions yourself.
-- If content appears copied, AI-generated, or irrelevant, reduce marks.
-- If no relevant content exists for a question, award 0 marks for that question.
-
-GLOBAL MARKING RULE:
-- Evaluate the assignment as a whole, but marks must be based on VERIFIED answers only.
-- If ANY question is unanswered, it must NOT contribute to total marks.
-
-OUTPUT RULES (MANDATORY):
-- Return ONLY valid JSON.
-- Do NOT explain reasoning.
-- Do NOT include any extra text.
-- Do NOT include assumptions.
-
-OUTPUT FORMAT (STRICT):
+OUTPUT FORMAT:
 {
   "questions": [
     {
-      "question": "Q1 text",
+      "question": "Exact question text",
       "max_marks": number,
       "marksObtained": number,
-      "feedback": ""
+      "feedback": "Detailed reasoning explaining why marks were awarded or deducted based strictly on the content."
     }
   ],
   "total_marks": number
-}
+}`
 
-IMPORTANT:
-- If the assignment does NOT contain content / images relevant to a question, marksObtained MUST be 0.
-- total_marks MUST be between 0 and 5.`
+
+// const assignmentCheckerPrompt= `You are an automated assignment checking AI.
+
+// You will receive the COMPLETE student assignment content only.
+// The content may include:
+// - Plain text
+// - Images (base64 encoded)
+// - A mix of text and images
+
+// STRICT EVALUATION RULES:
+// 1. Evaluate the assignment ONLY using the information explicitly present in the provided content.
+// 2. DO NOT use any external knowledge, training data, assumptions, or general understanding.
+// 3. DO NOT infer or guess missing answers.
+// 4. If an answer to a question is NOT clearly and directly present in the assignment content, it MUST receive ZERO marks.
+// 5. Each question must be validated against the assignment content before awarding marks.
+
+// CONTENT FILTERING:
+// - Ignore institute/university names
+// - Ignore teacher/professor names
+// - Ignore student names, roll numbers, IDs
+// - Ignore headers, footers, page numbers
+// - Ignore repeated templates, formatting text, or decorative content
+
+// EVALUATION CRITERIA:
+// - Relevance: The content/images must directly address the question.
+// - Correctness: Information must be factually correct AS WRITTEN by the student.
+// - Completeness: Partial answers receive partial marks.
+// - Clarity: Answers must be understandable.
+
+// ANTI-HALLUCINATION & ANTI-COPY RULES:
+// - Do NOT rewrite or complete answers on behalf of the student.
+// - Do NOT answer questions yourself.
+// - If content appears copied, AI-generated, or irrelevant, reduce marks.
+// - If no relevant content exists for a question, award 0 marks for that question.
+
+// GLOBAL MARKING RULE:
+// - Evaluate the assignment as a whole, but marks must be based on VERIFIED answers only.
+// - If ANY question is unanswered, it must NOT contribute to total marks.
+
+// OUTPUT RULES (MANDATORY):
+// - Return ONLY valid JSON.
+// - Do NOT explain reasoning.
+// - Do NOT include any extra text.
+// - Do NOT include assumptions.
+
+// OUTPUT FORMAT (STRICT):
+// {
+//   "questions": [
+//     {
+//       "question": "Q1 text",
+//       "max_marks": number,
+//       "marksObtained": number,
+//       "feedback": ""
+//     }
+//   ],
+//   "total_marks": number
+// }
+
+// IMPORTANT:
+// - If the assignment does NOT contain content / images relevant to a question, marksObtained MUST be 0.
+// - total_marks MUST be between 0 and 5.`
 
 
 const quizGeneratorPrompt = `
