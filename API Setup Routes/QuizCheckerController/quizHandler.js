@@ -92,10 +92,10 @@ Return ONLY valid JSON.
 const handler = async (req, res) => {
     try {
 
-        const { questions } = req.body
+        const { questions,total_marks } = req.body
         const pdfFile = req.file
         // console.log(questions)
-        // console.log(questions)
+
         const questionsArray = JSON.parse(questions)
         if (!Array.isArray(questionsArray)) res.status(400).json({ error: "Invalid input " })
 
@@ -106,7 +106,7 @@ const handler = async (req, res) => {
         const answerImages = await pdfToImageBuffer(pdfBuffer)
 
         const result = await checkQuiz({
-            questions: questionsArray, answerImages
+            questions: questionsArray, answerImages,totalMarks:total_marks
         })
         if (!result) {
             return res.status(401).json({ message: 'Issue in Function of Marks' })

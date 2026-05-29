@@ -1,7 +1,7 @@
 const {quizCheckerPrompt} = require('../prompts')
 const {openai} = require('../setup')
 
-const checkQuiz = async ({ questions, answerImages }) => {
+const checkQuiz = async ({ questions, answerImages,totalMarks }) => {
   console.log("Enter in Check Quiz Function");
 
   const response = await openai.responses.create({
@@ -24,7 +24,7 @@ Questions (in order):
 ${questions.map((currentElement,currentIndex) => `${currentIndex + 1}. ${currentElement.question} (Per Question Marks: ${currentElement.marks}`).join("\n")}
 
 Rules:
-- Total quiz marks = 5
+- Total Maximum Marks ${totalMarks}
 - Detect question boundaries automatically
 - Answers may span multiple pages
 - Ignore grammar & handwriting mistakes
@@ -35,7 +35,7 @@ Return ONLY valid JSON:
   "questions": [
     { "question": "Q1 text","max_marks":, "marksObtained": , "feedback": "" }
   ],
-  "total_marks": 5
+  "total_marks": 
 }
 `
           },
@@ -48,12 +48,12 @@ Return ONLY valid JSON:
         ]
       }
     ]
-  });
-
+  })
+  
   // ✅ FIX 3: safe JSON extraction
   const rawOutput = response.output_text;
-  const cleanJSON = rawOutput.replace(/```json|```/g, "").trim();
-
+  const cleanJSON = rawOutput.replace(/```json|```/g, "").trim()
+  // console.log("This is Final Data : ",cleanJSON)
   return JSON.parse(cleanJSON);
 }
 
